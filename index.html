@@ -68,25 +68,16 @@
             75% { transform: translate(-5%, -5%); }
         }
 
-        /* Floating particles */
-        .particle {
+        /* Tech lines canvas background */
+        #tech-lines {
             position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
             pointer-events: none;
-            opacity: 0.3;
-            animation: float 20s infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% { opacity: 0.3; }
-            90% { opacity: 0.3; }
-            100% {
-                transform: translateY(-100vh) translateX(100px) rotate(360deg);
-                opacity: 0;
-            }
+            opacity: 0.18;
         }
 
         /* Header */
@@ -122,6 +113,53 @@
             background: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
             opacity: 0.8;
             z-index: 1;
+        }
+
+        /* Bottom fade for header */
+        .header-fade {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--bg-primary) 90%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Flowing water waves below header content */
+        .header-wave {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 200%;
+            height: 90px;
+            z-index: 2;
+            opacity: 0.35;
+            transform: translateZ(0);
+        }
+
+        .header-wave svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .wave-layer {
+            animation: waveMove 10s linear infinite;
+        }
+        .wave-layer.second {
+            animation-duration: 14s;
+            opacity: 0.5;
+        }
+        .wave-layer.third {
+            animation-duration: 20s;
+            opacity: 0.35;
+        }
+
+        @keyframes waveMove {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
         }
 
         @keyframes slideDown {
@@ -282,30 +320,107 @@
 
         .contact-info {
             display: flex;
+            flex-direction: row;
+            align-items: center;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
             flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
             animation: fadeInUp 1s ease 0.5s both;
         }
 
         .contact-info a {
+            position: relative;
             color: white;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.3s ease;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease, width 0.35s ease, border-radius 0.35s ease, padding 0.35s ease;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+            overflow: hidden;
+        }
+
+        .contact-info a::before {
+            content: '';
+            position: absolute;
+            height: 44px;
+            width: 44px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 9999px;
+            z-index: -1;
+            transition: width 0.35s ease, border-radius 0.35s ease, left 0.35s ease, transform 0.35s ease, background 0.35s ease;
+        }
+
+        .contact-info a::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            height: 40%;
+            border-radius: 9999px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.35), rgba(255,255,255,0));
+            pointer-events: none;
+            opacity: 0.6;
         }
 
         .contact-info a:hover {
             transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.2);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-info a .icon {
+            font-size: 1.05rem;
+            width: 1.25rem;
+            text-align: center;
+        }
+
+        .contact-info a .icon img {
+            width: 1.1rem;
+            height: 1.1rem;
+            display: block;
+        }
+
+        .contact-info a .label {
+            max-width: 0;
+            opacity: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-left: 0rem;
+            transition: max-width 0.35s ease, opacity 0.35s ease, margin-left 0.35s ease;
+        }
+
+        .contact-info a.expanded {
+            padding: 0.5rem 0.9rem;
+            width: auto;
+            border-radius: 24px;
+        }
+
+        .contact-info a.expanded .label {
+            max-width: 320px;
+            opacity: 1;
+            margin-left: 0.4rem;
+        }
+
+        .contact-info a.expanded::before {
+            width: calc(100% + 8px); /* expand bg to pill */
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.16);
         }
 
         /* Theme Toggle */
@@ -357,11 +472,44 @@
             background: var(--accent);
         }
 
+        /* Smoke-like fade overlay for theme switch */
+        #theme-fade {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1500;
+            opacity: 0;
+            background:
+                radial-gradient(900px 600px at 30% 40%, rgba(0,0,0,0.25), transparent 60%),
+                radial-gradient(800px 500px at 70% 60%, rgba(0,0,0,0.2), transparent 60%);
+            filter: blur(10px);
+        }
+
+        .theme-fade-active {
+            animation: themeSmoke 1.2s ease forwards;
+        }
+
+        @keyframes themeSmoke {
+            0% {
+                opacity: 0.65;
+                transform: scale(1);
+                background-position: 30% 40%, 70% 60%;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.02);
+                background-position: 35% 45%, 65% 55%;
+            }
+        }
+
         /* Main Container */
         .container {
             max-width: 1200px;
             margin: 2rem auto;
-            padding: 0 2rem;
+            padding: 0 clamp(1rem, 4vw, 2rem);
         }
 
         /* Grid Layout */
@@ -383,6 +531,7 @@
             overflow: hidden;
             opacity: 0;
             transform: translateY(50px);
+            margin-bottom: 1rem; /* ensure space between stacked sections on mobile */
         }
 
         .card.animate {
@@ -651,6 +800,8 @@
 
             .header-content {
                 gap: 1.5rem;
+                padding-left: clamp(1rem, 4vw, 2rem);
+                padding-right: clamp(1rem, 4vw, 2rem);
             }
 
             .profile-image,
@@ -665,16 +816,22 @@
 
             .grid {
                 grid-template-columns: 1fr;
+                gap: 1.25rem;
             }
 
             .contact-info {
-                flex-direction: column;
+                flex-direction: row; /* keep horizontal on mobile */
+                justify-content: center;
+                align-items: center;
+                flex-wrap: wrap;
                 gap: 0.5rem;
             }
 
             .reference-grid {
                 grid-template-columns: 1fr;
+                gap: 1.25rem;
             }
+            .card { margin-bottom: 1.25rem; }
         }
 
         @media (max-width: 480px) {
@@ -736,57 +893,88 @@
     </style>
 </head>
 <body data-theme="light">
-    <!-- Loading Animation -->
+    
     <div class="loader">
         <div class="loader-circle"></div>
     </div>
 
-    <!-- Animated Background -->
+    
     <div class="animated-bg"></div>
     
-    <!-- Floating Particles -->
-    <div class="particle" style="left: 10%; animation-delay: 0s;">⚡</div>
-    <div class="particle" style="left: 30%; animation-delay: 3s;">💻</div>
-    <div class="particle" style="left: 50%; animation-delay: 6s;">🚀</div>
-    <div class="particle" style="left: 70%; animation-delay: 9s;">✨</div>
-    <div class="particle" style="left: 90%; animation-delay: 12s;">🎨</div>
+    <canvas id="tech-lines"></canvas>
 
-    <!-- Header -->
+    
     <header>
         <div class="header-bg"></div>
         <div class="header-overlay"></div>
+        <div class="header-fade"></div>
+        <div class="header-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <g class="wave-layer" fill="url(#grad1)">
+                    <path d="M0,40 C150,120 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z"></path>
+                </g>
+                <g class="wave-layer second" fill="url(#grad2)">
+                    <path d="M0,60 C200,0 400,120 600,60 C800,0 1000,100 1200,40 L1200,120 L0,120 Z"></path>
+                </g>
+                <g class="wave-layer third" fill="url(#grad3)">
+                    <path d="M0,80 C250,120 450,20 700,70 C950,120 1100,30 1200,80 L1200,120 L0,120 Z"></path>
+                </g>
+                <defs>
+                    <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stop-color="var(--gradient-1)" stop-opacity="0.6"/>
+                        <stop offset="100%" stop-color="var(--bg-primary)" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stop-color="var(--gradient-2)" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="var(--bg-primary)" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="grad3" x1="0" x2="0" y1="0" y2="1">
+                        <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="var(--bg-primary)" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div>
         <div class="header-content">
             <div class="profile-image-container">
                 <img src="img.jpg" alt="Jeanaih Villanueva" class="profile-image">
             </div>
             <div class="header-text">
                 <h1>JEANAIH VILLANUEVA</h1>
-                <div class="social-media">
-                    <a href="https://www.facebook.com/itsme.ThePogi.Jeanaih" target="_blank" class="social-icon" title="Facebook Messenger">
-                        <img src="https://cdn-icons-png.flaticon.com/128/9333/9333888.png" alt="Messenger" style="width: 24px; height: 24px;">
-                    </a>
-                    <a href="https://www.instagram.com/naihsocute" target="_blank" class="social-icon" title="Instagram">
-                        <img src="https://cdn-icons-png.flaticon.com/128/1400/1400829.png" alt="Instagram" style="width: 24px; height: 24px;">
-                    </a>
-                </div>
                 <div class="contact-info">
-                    <a href="tel:+639632596261">📞 +63 963-259-6261</a>
-                    <a href="mailto:Jeanaih016@gmail.com">✉️ Jeanaih016@gmail.com</a>
+                    <a href="https://www.facebook.com/itsme.ThePogi.Jeanaih" target="_blank" class="contact-link" title="Facebook Messenger">
+                        <span class="icon"><img src="https://cdn-icons-png.flaticon.com/128/9333/9333888.png" alt="Messenger"></span>
+                        <span class="label">Jeanaih Villanueva</span>
+                    </a>
+                    <a href="https://www.instagram.com/naihsocute" target="_blank" class="contact-link" title="Instagram">
+                        <span class="icon"><img src="https://cdn-icons-png.flaticon.com/128/1400/1400829.png" alt="Instagram"></span>
+                        <span class="label">naihsocute</span>
+                    </a>
+                    <a href="tel:+639632596261" class="contact-link" data-label="+63 963-259-6261">
+                        <span class="icon"><img src="https://cdn-icons-png.flaticon.com/128/6596/6596115.png" alt="Phone"></span>
+                        <span class="label">+63 963-259-6261</span>
+                    </a>
+                    <a href="mailto:Jeanaih016@gmail.com" class="contact-link" data-label="Jeanaih016@gmail.com">
+                        <span class="icon"><img src="https://cdn-icons-png.flaticon.com/128/16935/16935745.png" alt="Email"></span>
+                        <span class="label">Jeanaih016@gmail.com</span>
+                    </a>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Theme Toggle -->
+    
     <div class="theme-toggle-container">
         <div class="theme-toggle" onclick="toggleTheme()">
             <div class="theme-toggle-slider" id="theme-slider">🌙</div>
         </div>
     </div>
+    
+    <div id="theme-fade"></div>
 
-    <!-- Main Content -->
+    
     <div class="container">
-        <!-- Profile Section -->
+        
         <div class="card" style="animation-delay: 0.2s;">
             <h2>PROFILE</h2>
             <p class="profile-text">
@@ -794,11 +982,11 @@
             </p>
         </div>
 
-        <!-- Main Grid -->
+        
         <div class="grid">
-            <!-- Left Column -->
+            
             <div>
-                <!-- Skills -->
+                
                 <div class="card" style="animation-delay: 0.3s;">
                     <h2>SKILLS & QUALIFICATIONS</h2>
                     <ul class="skill-list">
@@ -812,7 +1000,7 @@
                     </ul>
                 </div>
 
-                <!-- Seminars & Training -->
+                
                 <div class="card" style="animation-delay: 0.4s;">
                     <h2>SEMINARS & TRAINING</h2>
                     <div class="timeline-item" style="--i: 1;">
@@ -844,9 +1032,9 @@
                 </div>
             </div>
 
-            <!-- Right Column -->
+            
             <div>
-                <!-- Education -->
+                
                 <div class="card" style="animation-delay: 0.5s;">
                     <h2>EDUCATION</h2>
                     <div class="timeline-item" style="--i: 1;">
@@ -873,7 +1061,7 @@
                     </div>
                 </div>
 
-                <!-- Work Experience -->
+                
                 <div class="card" style="animation-delay: 0.6s;">
                     <h2>WORK EXPERIENCE</h2>
                     <div class="timeline-item" style="--i: 1;">
@@ -913,7 +1101,7 @@
             </div>
         </div>
 
-        <!-- References -->
+        
         <div class="card" style="animation-delay: 0.7s;">
             <h2>REFERENCES</h2>
             <div class="reference-grid">
@@ -927,6 +1115,11 @@
                     <div class="reference-title">Web Developer / IT Maintenance</div>
                     <div class="reference-contact">Vision Academy / ACLC College of Apalit<br>lebusi1090@gmail.com</div>
                 </div>
+                <div class="reference-card" style="--i: 3;">
+                    <div class="reference-name">Benidict Bandillo</div>
+                    <div class="reference-title"> Character Reference</div>
+                    <div class="reference-contact">09389034082</div>
+                </div>
             </div>
         </div>
     </div>
@@ -937,8 +1130,17 @@
             const body = document.body;
             const themeToggle = document.querySelector('.theme-toggle');
             const themeSlider = document.getElementById('theme-slider');
+            const fade = document.getElementById('theme-fade');
             const currentTheme = body.getAttribute('data-theme');
             
+            // trigger smoke fade overlay
+            if (fade) {
+                fade.classList.remove('theme-fade-active');
+                // force reflow to restart animation
+                void fade.offsetWidth;
+                fade.classList.add('theme-fade-active');
+            }
+
             if (currentTheme === 'light') {
                 body.setAttribute('data-theme', 'dark');
                 themeSlider.textContent = '☀️';
@@ -992,6 +1194,7 @@
             const skillItems = document.querySelectorAll('.skill-list li');
             const awardBadges = document.querySelectorAll('.award-badge');
             const referenceCards = document.querySelectorAll('.reference-card');
+            const contactLinks = document.querySelectorAll('.contact-link');
             
             // Observe cards
             cards.forEach(card => {
@@ -1017,35 +1220,100 @@
             referenceCards.forEach(card => {
                 observer.observe(card);
             });
+
+            // Contact links: expand on click (toggle)
+            contactLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // first tap expands; second tap activates link
+                    if (!link.classList.contains('expanded')) {
+                        e.preventDefault();
+                        contactLinks.forEach(l => { if (l !== link) l.classList.remove('expanded'); });
+                        link.classList.add('expanded');
+                    }
+                    // else let it proceed normally
+                });
+            });
         });
 
         // Add interactive hover effect to contact info
-        document.querySelectorAll('.contact-info span').forEach(item => {
-            item.addEventListener('mouseenter', function() {
+        document.querySelectorAll('.contact-info a').forEach(link => {
+            link.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-5px) scale(1.05)';
             });
-            item.addEventListener('mouseleave', function() {
+            link.addEventListener('mouseleave', function() {
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
 
-        // Dynamic particle generation
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 20 + 's';
-            particle.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            particle.textContent = ['⚡', '💻', '🚀', '✨', '🎨', '🌟', '💡'][Math.floor(Math.random() * 7)];
-            document.body.appendChild(particle);
-            
-            setTimeout(() => {
-                particle.remove();
-            }, 20000);
-        }
+        // Tech lines canvas animation
+        (function() {
+            const canvas = document.getElementById('tech-lines');
+            const ctx = canvas.getContext('2d');
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+            const lineCount = 60;
+            const lines = [];
 
-        // Generate particles periodically
-        setInterval(createParticle, 3000);
+            function themeColors() {
+                const styles = getComputedStyle(document.body);
+                const accent = styles.getPropertyValue('--accent').trim();
+                const border = styles.getPropertyValue('--border').trim();
+                return { accent, border };
+            }
+
+            function createLines() {
+                lines.length = 0;
+                for (let i = 0; i < lineCount; i++) {
+                    const vertical = Math.random() > 0.5;
+                    lines.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        length: 50 + Math.random() * 200,
+                        speed: 0.3 + Math.random() * 0.8,
+                        vertical,
+                        phase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+                createLines();
+            }
+
+            window.addEventListener('resize', resize);
+
+            createLines();
+
+            function draw() {
+                const { accent, border } = themeColors();
+                ctx.clearRect(0, 0, width, height);
+                for (const l of lines) {
+                    const t = (Math.sin(l.phase) + 1) / 2; // 0..1
+                    const color = t > 0.6 ? accent : border;
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 1 + t * 1.5;
+                    ctx.beginPath();
+                    if (l.vertical) {
+                        ctx.moveTo(l.x, l.y);
+                        ctx.lineTo(l.x, l.y + l.length);
+                        l.y += l.speed;
+                        if (l.y > height) l.y = -l.length;
+                    } else {
+                        ctx.moveTo(l.x, l.y);
+                        ctx.lineTo(l.x + l.length, l.y);
+                        l.x += l.speed;
+                        if (l.x > width) l.x = -l.length;
+                    }
+                    ctx.stroke();
+                    l.phase += 0.02;
+                }
+                requestAnimationFrame(draw);
+            }
+
+            draw();
+        })();
 
         // Add typing effect to the name on load
         window.addEventListener('load', () => {
